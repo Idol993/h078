@@ -4,6 +4,12 @@ weights:
   liquidation_speed: 0.2
   supply_volume: 0.1
 
+analysis:
+  skip_missing_price_growth: true
+  min_rent_sample_ratio: 0.3
+  min_growth_sample_ratio: 0.2
+  renormalize_weights: true
+
 city_boundary:
   min_lat: 30.0
   max_lat: 32.0
@@ -62,3 +68,8 @@ map:
   output_path: "property_map.html"
   tile_layer: "OpenStreetMap"
   zoom_start: 12
+  offline_mode: true
+  offline_assets_dir: "map_assets"
+  tile_cache_dir: "map_assets/tiles"
+  show_cluster_boundary: true
+  boundary_opacity: 0.25
