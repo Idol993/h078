@@ -91,8 +91,10 @@ def cmd_analyze(config: str, top: int, export: str):
 @click.option("--config", "-c", default="config.yaml", show_default=True, help="配置文件路径")
 @click.option("--output", "-o", default=None, type=click.Path(), help="输出HTML路径")
 @click.option("--top", "-t", default=None, type=int, help="仅渲染TOP N板块，默认全部")
-def cmd_map(config: str, output: str, top: int):
-    """生成folium交互式HTML热力图，点击查看板块详情"""
+@click.option("--force-online", is_flag=True, default=False, help="强制生成在线模式（使用CDN），并在文件名加 -online 后缀")
+@click.option("--strict-offline/--no-strict-offline", is_flag=True, default=True, help="离线模式下缺资源/瓦片时是否中止生成（默认True）")
+def cmd_map(config: str, output: str, top: int, force_online: bool, strict_offline: bool):
+    """生成交互式HTML热力图，点击查看板块详情"""
     from .mapper import PropertyMapper
 
     if not ANALYSIS_CSV.exists():
@@ -103,8 +105,24 @@ def cmd_map(config: str, output: str, top: int):
     analysis = pd.read_csv(ANALYSIS_CSV, encoding="utf-8-sig")
 
     mapper = PropertyMapper(config_path=config)
-    out = mapper.generate_map(analysis, output_path=output, top_n=top)
+    out = mapper.generate_map(
+        analysis,
+        output_path=output,
+        top_n=top,
+        force_online=force_online,
+        strict_offline=strict_offline,
+    )
     console.print(f"🎉 地图生成成功! 请用浏览器打开: [link=file:///{out}]{out}[/link]")
+
+
+@cli.command("verify-map")
+@click.argument("html_path", type=click.Path(exists=True, dir_okay=False))
+def cmd_verify_map(html_path: str):
+    """验证生成的地图HTML：无公网CDN、无Notebook外壳、边界/圆点/Popup完整性"""
+    from .mapper import verify_map_html
+
+    result = verify_map_html(html_path)
+    sys.exit(0 if result["ok"] else 1)
 
 
 @cli.command("all")
@@ -113,7 +131,17 @@ def cmd_map(config: str, output: str, top: int):
 @click.option("--top", "-t", default=20, show_default=True, help="显示TOP N板块")
 @click.option("--map-output", "-o", default=None, type=click.Path(), help="地图HTML输出路径")
 @click.option("--export", "-e", default=None, type=click.Path(), help="导出分析结果CSV路径")
-def cmd_all(csv_path: str, config: str, top: int, map_output: str, export: str):
+@click.option("--force-online", is_flag=True, default=False, help="强制生成在线模式地图（使用CDN）")
+@click.option("--strict-offline/--no-strict-offline", is_flag=True, default=True, help="离线模式下缺资源时是否中止（默认True）")
+def cmd_all(
+    csv_path: str,
+    config: str,
+    top: int,
+    map_output: str,
+    export: str,
+    force_online: bool,
+    strict_offline: bool,
+):
     """一键执行: 加载 → 聚类分析 → 输出排行榜 → 生成地图"""
     from .loader import PropertyLoader
     from .cluster import PropertyCluster
@@ -144,7 +172,12 @@ def cmd_all(csv_path: str, config: str, top: int, map_output: str, export: str):
 
     console.rule("[green]Step 4/4: 生成交互式地图[/green]")
     mapper = PropertyMapper(config_path=config)
-    out = mapper.generate_map(result, output_path=map_output)
+    out = mapper.generate_map(
+        result,
+        output_path=map_output,
+        force_online=force_online,
+        strict_offline=strict_offline,
+    )
     console.rule("[bold green]全部完成![/bold green]")
     console.print(f"🎉 地图文件: [link=file:///{out}]{out}[/link]")
 
