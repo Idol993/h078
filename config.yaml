@@ -1,0 +1,64 @@
+weights:
+  rental_ratio: 0.4
+  price_growth: 0.3
+  liquidation_speed: 0.2
+  supply_volume: 0.1
+
+city_boundary:
+  min_lat: 30.0
+  max_lat: 32.0
+  min_lng: 113.0
+  max_lng: 115.0
+
+cluster:
+  eps: 0.005
+  min_samples: 5
+
+data_cleaning:
+  max_listing_days: 500
+  min_valid_price: 1000
+
+column_mapping:
+  lianjia:
+    community_name: ["小区名称", "小区", "community", "xiaoqu"]
+    latitude: ["纬度", "lat", "latitude"]
+    longitude: ["经度", "lng", "lon", "longitude"]
+    unit_price: ["单价", "均价", "price", "unit_price", "单价(元/㎡)"]
+    total_price: ["总价", "total_price"]
+    area: ["建筑面积", "面积", "area", "建筑面积(㎡)"]
+    layout: ["户型", "layout", "house_type"]
+    listing_days: ["挂牌天数", "上架天数", "days_on_market", "listing_days"]
+    monthly_rent: ["月租金", "租金", "rent", "monthly_rent"]
+    last_deal_price: ["近期成交价", "成交价", "deal_price"]
+    price_last_year: ["去年同期价", "去年挂牌价", "price_last_year"]
+
+  beike:
+    community_name: ["小区名称", "小区", "community", "xiaoqu"]
+    latitude: ["纬度", "lat", "latitude"]
+    longitude: ["经度", "lng", "lon", "longitude"]
+    unit_price: ["单价", "均价", "price", "unit_price", "单价(元/㎡)"]
+    total_price: ["总价", "total_price"]
+    area: ["建筑面积", "面积", "area", "建筑面积(㎡)"]
+    layout: ["户型", "layout", "house_type"]
+    listing_days: ["挂牌天数", "上架天数", "days_on_market", "listing_days"]
+    monthly_rent: ["月租金", "租金", "rent", "monthly_rent"]
+    last_deal_price: ["近期成交价", "成交价", "deal_price"]
+    price_last_year: ["去年同期价", "去年挂牌价", "price_last_year"]
+
+  anjuke:
+    community_name: ["小区名称", "小区", "community", "xiaoqu", "楼盘名称"]
+    latitude: ["纬度", "lat", "latitude"]
+    longitude: ["经度", "lng", "lon", "longitude"]
+    unit_price: ["单价", "均价", "price", "unit_price", "单价(元/㎡)"]
+    total_price: ["总价", "total_price"]
+    area: ["建筑面积", "面积", "area", "建筑面积(㎡)"]
+    layout: ["户型", "layout", "house_type"]
+    listing_days: ["挂牌天数", "上架天数", "days_on_market", "listing_days"]
+    monthly_rent: ["月租金", "租金", "rent", "monthly_rent"]
+    last_deal_price: ["近期成交价", "成交价", "deal_price"]
+    price_last_year: ["去年同期价", "去年挂牌价", "price_last_year"]
+
+map:
+  output_path: "property_map.html"
+  tile_layer: "OpenStreetMap"
+  zoom_start: 12
